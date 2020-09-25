@@ -56,7 +56,7 @@ public class Config implements IConfigHandler {
 
             if (element != null && element.isJsonObject()) {
                 JsonObject root = element.getAsJsonObject();
-                ConfigUtils.readConfigBase(root, "ChatMacros", getDefaultConfig());
+                ConfigUtils.readConfigBase(root, "RichPresenceMod", getDefaultConfig());
             }
         }
     }
@@ -67,7 +67,7 @@ public class Config implements IConfigHandler {
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();
-            ConfigUtils.writeConfigBase(root, "ChatMacros", getDefaultConfig());
+            ConfigUtils.writeConfigBase(root, "RichPresenceMod", getDefaultConfig());
             JsonUtils.writeJsonToFile(root, new File(dir, "richpresencemod.json"));
         }
     }
