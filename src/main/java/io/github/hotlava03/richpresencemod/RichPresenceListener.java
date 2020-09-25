@@ -5,6 +5,7 @@ import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
+import io.github.hotlava03.richpresencemod.config.Config;
 import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 
@@ -13,23 +14,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class RichPresenceListener implements IPCListener {
-    private OffsetDateTime timestamp;
+    private static OffsetDateTime timestamp;
     private Timer timer;
 
     @Override
     public void onReady(IPCClient client) {
         timestamp = OffsetDateTime.now();
+        Config config = Config.getInstance();
         RichPresence.Builder builder = new RichPresence.Builder()
                 .setStartTimestamp(timestamp)
-                .setLargeImage("large-logo", "Minecraft")
-                .setSmallImage("small-logo", "Rich Presence Mod by HotLava03");
+                .setLargeImage(config.getStringValue("largeImage"),
+                        config.getStringValue("largeImageText"))
+                .setSmallImage(config.getStringValue("smallImage"),
+                        config.getStringValue("smallImageText"));
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.getCurrentServerEntry() == null) {
-            builder.setState("Idle")
-                    .setDetails("In title screen");
+            builder.setState(config.getStringValue("stateIdle"))
+                    .setDetails(config.getStringValue("detailsIdle"));
         } else {
-            builder.setState("Playing in " + mc.getCurrentServerEntry().address)
-                    .setDetails(mc.getCurrentServerEntry().playerCountLabel.getString() + " players online.");
+            builder.setState(config.getStringValue("stateInServer").replace("$address", mc.getCurrentServerEntry().address))
+                    .setDetails(config.getStringValue("detailsInServer").replace("$playerCount", mc.getCurrentServerEntry().playerCountLabel.getString()));
         }
         client.sendRichPresence(builder.build());
         try {
@@ -57,5 +61,9 @@ public class RichPresenceListener implements IPCListener {
                 }
             }
         }, 0, 10000);
+    }
+
+    public static OffsetDateTime getTimestamp() {
+        return timestamp;
     }
 }

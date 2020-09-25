@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "io.github.hotlava03.richpresencemod.RichPresenceMod"
+    ],
+    "modmenu": [
+      "io.github.hotlava03.richpresencemod.ModMenuApiImpl"
     ]
   },
   "mixins": [

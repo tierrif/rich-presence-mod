@@ -3,6 +3,7 @@ package io.github.hotlava03.richpresencemod;
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
+import io.github.hotlava03.richpresencemod.config.Config;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 
@@ -11,7 +12,7 @@ public class RichPresenceMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		client = new IPCClient(758455515658846269L);
+		client = new IPCClient(Long.parseLong(Config.getInstance().getStringValue("clientId")));
 		client.setListener(new RichPresenceListener());
 		try {
 			client.connect(DiscordBuild.ANY);
