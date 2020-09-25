@@ -4,26 +4,28 @@ import com.jagrosh.discordipc.entities.RichPresence;
 import io.github.hotlava03.richpresencemod.RichPresenceListener;
 import io.github.hotlava03.richpresencemod.RichPresenceMod;
 import io.github.hotlava03.richpresencemod.config.Config;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.text.Text;
+import io.github.hotlava03.richpresencemod.util.VarHandler;
+import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(MinecraftClient.class)
 public class LeaveServerMixin {
-    @Inject(at = @At("RETURN"), method = "onDisconnected")
-    private void onServerDisconnect(Text reason) {
+    @Inject(at = @At("RETURN"), method = "disconnect")
+    private void disconnect(CallbackInfo info) {
+        VarHandler.update();
         Config config = Config.getInstance();
         RichPresence.Builder builder = new RichPresence.Builder()
                 .setStartTimestamp(RichPresenceListener.getTimestamp())
                 .setLargeImage(config.getStringValue("largeImage"),
-                        config.getStringValue("largeImageText"))
+                        VarHandler.repl(config.getStringValue("largeImageText")))
                 .setSmallImage(config.getStringValue("smallImage"),
-                        config.getStringValue("smallImageText"))
-                .setState(config.getStringValue("stateIdle"))
-                .setDetails(config.getStringValue("detailsIdle"));
+                        VarHandler.repl(config.getStringValue("smallImageText")))
+                .setState(VarHandler.repl(config.getStringValue("stateIdle")))
+                .setDetails(VarHandler.repl(config.getStringValue("detailsIdle")));
         try {
             RichPresenceMod.getClient().sendRichPresence(builder.build());
             LogManager.getLogger().info("Rich presence updated with new server data.");

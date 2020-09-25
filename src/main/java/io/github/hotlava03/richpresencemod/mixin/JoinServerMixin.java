@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import io.github.hotlava03.richpresencemod.RichPresenceListener;
 import io.github.hotlava03.richpresencemod.RichPresenceMod;
 import io.github.hotlava03.richpresencemod.config.Config;
+import io.github.hotlava03.richpresencemod.util.VarHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -19,19 +20,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class JoinServerMixin {
 	@Inject(at = @At("RETURN"), method = "<init>")
 	private void onServerJoin(MinecraftClient mc, Screen screen, ClientConnection connection, GameProfile profile, CallbackInfo info) {
+		VarHandler.update();
 		Config config = Config.getInstance();
 		RichPresence.Builder builder = new RichPresence.Builder()
 				.setStartTimestamp(RichPresenceListener.getTimestamp())
 				.setLargeImage(config.getStringValue("largeImage"),
-						config.getStringValue("largeImageText"))
+						VarHandler.repl(config.getStringValue("largeImageText")))
 				.setSmallImage(config.getStringValue("smallImage"),
-						config.getStringValue("smallImageText"));
+						VarHandler.repl(config.getStringValue("smallImageText")));
 		if (mc.getCurrentServerEntry() == null) {
 			LogManager.getLogger().warn("Why would a server not exist when it's being connected to?");
 			return;
 		} else {
-			builder.setState(config.getStringValue("stateInServer").replace("$address", mc.getCurrentServerEntry().address))
-					.setDetails(config.getStringValue("detailsInServer").replace("$playerCount", mc.getCurrentServerEntry().playerCountLabel.getString()));
+			builder.setState(VarHandler.repl(config.getStringValue("stateInServer")))
+					.setDetails(VarHandler.repl(config.getStringValue("detailsInServer")));
 		}
 		try {
 			RichPresenceMod.getClient().sendRichPresence(builder.build());

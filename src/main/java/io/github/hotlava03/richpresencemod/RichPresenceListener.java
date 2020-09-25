@@ -6,6 +6,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import io.github.hotlava03.richpresencemod.config.Config;
+import io.github.hotlava03.richpresencemod.util.VarHandler;
 import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 
@@ -19,21 +20,22 @@ public class RichPresenceListener implements IPCListener {
 
     @Override
     public void onReady(IPCClient client) {
+        VarHandler.update();
         timestamp = OffsetDateTime.now();
         Config config = Config.getInstance();
         RichPresence.Builder builder = new RichPresence.Builder()
                 .setStartTimestamp(timestamp)
                 .setLargeImage(config.getStringValue("largeImage"),
-                        config.getStringValue("largeImageText"))
+                        VarHandler.repl(config.getStringValue("largeImageText")))
                 .setSmallImage(config.getStringValue("smallImage"),
-                        config.getStringValue("smallImageText"));
+                        VarHandler.repl(config.getStringValue("smallImageText")));
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.getCurrentServerEntry() == null) {
-            builder.setState(config.getStringValue("stateIdle"))
-                    .setDetails(config.getStringValue("detailsIdle"));
+            builder.setState(VarHandler.repl(config.getStringValue("stateIdle")))
+                    .setDetails(VarHandler.repl(config.getStringValue("detailsIdle")));
         } else {
-            builder.setState(config.getStringValue("stateInServer").replace("$address", mc.getCurrentServerEntry().address))
-                    .setDetails(config.getStringValue("detailsInServer").replace("$playerCount", mc.getCurrentServerEntry().playerCountLabel.getString()));
+            builder.setState(VarHandler.repl(config.getStringValue("stateInServer")))
+                    .setDetails(VarHandler.repl(config.getStringValue("detailsInServer")));
         }
         client.sendRichPresence(builder.build());
         try {

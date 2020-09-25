@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "JoinServerMixin"
+    "JoinServerMixin",
+    "LeaveServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
