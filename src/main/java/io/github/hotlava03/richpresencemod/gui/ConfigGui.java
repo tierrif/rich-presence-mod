@@ -13,7 +13,7 @@ public class ConfigGui extends GuiConfigsBase {
 
     @Override
     public List<ConfigOptionWrapper> getConfigs() {
-        return ConfigOptionWrapper.createFor(Config.getInstance().getDefaultConfig());
+        return ConfigOptionWrapper.createFor(Config.DEFAULT_CONFIG);
     }
 
     @Override

@@ -8,10 +8,17 @@ import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 
 public class RichPresenceMod implements ModInitializer {
-	private static IPCClient client;
+	private static RichPresenceMod instance;
+	private IPCClient client;
 
 	@Override
 	public void onInitialize() {
+		instance = this;
+		this.connect();
+		Config.getInstance().load();
+	}
+
+	public void connect() {
 		client = new IPCClient(Long.parseLong(Config.getInstance().getStringValue("clientId")));
 		client.setListener(new RichPresenceListener());
 		try {
@@ -19,10 +26,17 @@ public class RichPresenceMod implements ModInitializer {
 			LogManager.getLogger().info("Rich presence enabled.");
 		} catch (NoDiscordClientException e) {
 			LogManager.getLogger().info("No Discord client found. Skipping rich presence.");
+		} catch (IllegalStateException ignore) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	}
 
-	public static IPCClient getClient() {
+	public static RichPresenceMod getInstance() {
+		return instance;
+	}
+
+	public IPCClient getClient() {
 		return client;
 	}
 }

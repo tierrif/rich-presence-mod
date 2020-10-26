@@ -27,7 +27,7 @@ public class LeaveServerMixin {
                 .setState(VarHandler.repl(config.getStringValue("stateIdle")))
                 .setDetails(VarHandler.repl(config.getStringValue("detailsIdle")));
         try {
-            RichPresenceMod.getClient().sendRichPresence(builder.build());
+            RichPresenceMod.getInstance().getClient().sendRichPresence(builder.build());
             LogManager.getLogger().info("Rich presence updated with new server data.");
         } catch (IllegalStateException e) {
             LogManager.getLogger().warn("Discord is not connected. Skipping rich presence update.");

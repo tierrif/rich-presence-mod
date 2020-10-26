@@ -20,31 +20,8 @@ public class RichPresenceListener implements IPCListener {
 
     @Override
     public void onReady(IPCClient client) {
-        VarHandler.update();
         timestamp = OffsetDateTime.now();
-        Config config = Config.getInstance();
-        RichPresence.Builder builder = new RichPresence.Builder()
-                .setStartTimestamp(timestamp)
-                .setLargeImage(config.getStringValue("largeImage"),
-                        VarHandler.repl(config.getStringValue("largeImageText")))
-                .setSmallImage(config.getStringValue("smallImage"),
-                        VarHandler.repl(config.getStringValue("smallImageText")));
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.getCurrentServerEntry() == null) {
-            builder.setState(VarHandler.repl(config.getStringValue("stateIdle")))
-                    .setDetails(VarHandler.repl(config.getStringValue("detailsIdle")));
-        } else {
-            builder.setState(VarHandler.repl(config.getStringValue("stateInServer")))
-                    .setDetails(VarHandler.repl(config.getStringValue("detailsInServer")));
-        }
-        client.sendRichPresence(builder.build());
-        try {
-            client.sendRichPresence(builder.build());
-            LogManager.getLogger().info("Rich presence updated.");
-        } catch (IllegalStateException e) {
-            LogManager.getLogger().warn("Discord is not connected. Skipping rich presence update.");
-        }
-
+        reloadRichPresence(client);
         this.timer = new Timer();
         startTimer(client);
     }
@@ -67,5 +44,30 @@ public class RichPresenceListener implements IPCListener {
 
     public static OffsetDateTime getTimestamp() {
         return timestamp;
+    }
+
+    public static void reloadRichPresence(IPCClient client) {
+        VarHandler.update();
+        Config config = Config.getInstance();
+        RichPresence.Builder builder = new RichPresence.Builder()
+                .setStartTimestamp(timestamp)
+                .setLargeImage(config.getStringValue("largeImage"),
+                        VarHandler.repl(config.getStringValue("largeImageText")))
+                .setSmallImage(config.getStringValue("smallImage"),
+                        VarHandler.repl(config.getStringValue("smallImageText")));
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.getCurrentServerEntry() == null) {
+            builder.setState(VarHandler.repl(config.getStringValue("stateIdle")))
+                    .setDetails(VarHandler.repl(config.getStringValue("detailsIdle")));
+        } else {
+            builder.setState(VarHandler.repl(config.getStringValue("stateInServer")))
+                    .setDetails(VarHandler.repl(config.getStringValue("detailsInServer")));
+        }
+        try {
+            client.sendRichPresence(builder.build());
+            LogManager.getLogger().info("Rich presence updated.");
+        } catch (IllegalStateException e) {
+            LogManager.getLogger().warn("Discord is not connected. Skipping rich presence update.");
+        }
     }
 }
