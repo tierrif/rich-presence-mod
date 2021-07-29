@@ -10,4 +10,5 @@ class DefaultValues {
     static String STATE_IN_SERVER = "Playing in $address";
     static String DETAILS_IDLE = "In title screen";
     static String DETAILS_IN_SERVER = "$playerCount players online";
+    static String DETAILS_IN_SINGLEPLAYER = "--";
 }

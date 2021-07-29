@@ -33,7 +33,8 @@ public class Config implements IConfigHandler {
                 new ConfigString("stateIdle", DefaultValues.STATE_IDLE, "The state text when idle (Title Screen)."),
                 new ConfigString("stateInServer", DefaultValues.STATE_IN_SERVER, "The state when in a server."),
                 new ConfigString("detailsIdle", DefaultValues.DETAILS_IDLE, "The detail text when idle (Title Screen)."),
-                new ConfigString("detailsInServer", DefaultValues.DETAILS_IN_SERVER, "The detail text when in a server.")
+                new ConfigString("detailsInServer", DefaultValues.DETAILS_IN_SERVER, "The detail text when in a server."),
+                new ConfigString("detailsInSingleplayer", DefaultValues.DETAILS_IN_SINGLEPLAYER, "The detail text when in singleplayer")
         );
     }
 

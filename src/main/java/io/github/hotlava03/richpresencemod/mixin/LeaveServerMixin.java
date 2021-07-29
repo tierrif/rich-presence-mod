@@ -6,6 +6,7 @@ import io.github.hotlava03.richpresencemod.RichPresenceMod;
 import io.github.hotlava03.richpresencemod.config.Config;
 import io.github.hotlava03.richpresencemod.util.VarHandler;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public class LeaveServerMixin {
-    @Inject(at = @At("RETURN"), method = "disconnect")
-    private void disconnect(CallbackInfo info) {
+    @Inject(at = @At("RETURN"), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
+    private void disconnect(Screen screen, CallbackInfo info) {
         VarHandler.update();
         Config config = Config.getInstance();
         RichPresence.Builder builder = new RichPresence.Builder()
