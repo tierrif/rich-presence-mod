@@ -17,6 +17,7 @@ If your client version is `1.16`, for example, do not download the newest
 [Releases](https://github.com/HotLava03/rich-presence-mod/releases)
 section of this page.
 
+- Download [Fabric Loader](https://fabricmc.net/use/) and [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) for your Minecraft version if you didn't yet.
 - Download both [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib)
   and [ModMenu](https://www.curseforge.com/minecraft/mc-mods/modmenu) mods and place them in your `mods`
   folder, if you haven't yet.
